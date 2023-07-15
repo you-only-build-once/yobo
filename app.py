@@ -2,6 +2,25 @@ import streamlit as st
 
 from function import uml
 
+import urllib.request
+
+# import requests
+# from PIL import Image
+# import io
+# import base64
+
+# def get_image(url):
+#     response = requests.get(url)
+#     image = Image.open(io.BytesIO(response.content))
+#     return image
+
+# def get_image_download_link(img, filename='download_image.png', text='Click here to download: '):
+#     buffered = io.BytesIO()
+#     img.save(buffered, format="PNG")
+#     img_str = base64.b64encode(buffered.getvalue()).decode()
+#     href = f'<a href="data:file/png;base64,{img_str}" download="{filename}">{text}{filename}</a>'
+#     return href
+
 # page config 
 st.set_page_config(
     page_title="yobo.io",
@@ -47,5 +66,10 @@ with uml_block:
         st.write(uml_dict["comments"])
         st.image(image=uml_dict["url"]
                 , width = 750)
+        st.markdown(
+            f'<a href="{uml_dict["url"]}" target="_blank"><input type="button" value="load uml"></a>',
+            unsafe_allow_html=True
+        )
     except NameError:
         st.write("waiting for user description")
+    

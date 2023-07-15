@@ -1,7 +1,9 @@
 import json
 from typing import Dict
 
+
 from plantuml import PlantUML
+
 
 from function.gpt import GPTInstance
 from function.gpt4_examples import gpt4_examples
