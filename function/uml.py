@@ -4,6 +4,7 @@ from typing import Dict
 from plantuml import PlantUML
 
 from function.gpt import GPTInstance
+from function.gpt4_examples import gpt4_examples
 
 PLANT_UML_SERVER: PlantUML = PlantUML(url="http://www.plantuml.com/plantuml/img/")
 
@@ -41,6 +42,7 @@ def generate_uml_code(project_requirements: str) -> Dict:
             }
         ]
     )
+    uml_agent.messages += gpt4_examples
     output = uml_agent(
         f"""Hey chatGPT, I want to brainstorm for a new project, the idea is:\n{project_requirements}
         Can you create an initial diagram (using plantUML) of how I can build it?
