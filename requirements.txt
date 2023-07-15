@@ -1,5 +1,6 @@
+# python 3.9
 streamlit
-plantuml==0.3.0
-openai==0.27.8
-tiktoken==0.4.0
-python-dotenv==1.0.0
+plantuml
+openai
+tiktoken
+python-dotenv
