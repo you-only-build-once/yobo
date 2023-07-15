@@ -1,30 +1,35 @@
 import json
 
 from function.gpt import GPTInstance
+from function.gpt4_examples import folder_examples
 
 
-def folder_structure_gen(problem_descrption: str, uml_code: str) -> str:
+def folder_structure_gen(problem_description: str, uml_code: str) -> str:
     codegen_agent = GPTInstance(
-        system_prompt="Given a UML diagram and problem description, generate the folder structure and files for the repo to implement it. Make sure no folder is empty",
+        system_prompt="You are a helpful assistant.",
         functions=[
             {
-                "name": "submit_folder_structure",
+                "name": "submit_file_structure",
                 "description": "Submit the the folder structure associated with the project",
                 "parameters": {
                     "type": "object",
                     "properties": {
-                        "folder_structure": {
+                        "file_structure": {
                             "type": "string",
-                            "description": "JSON String where each folder is a key and values might be other dictionaries or strings if a file",
+                            "description": "JSON String containing all the folders and files",
                         },
                     },
-                    "required": ["folder_structure"],
+                    "required": ["file_structure"],
                 },
             }
         ],
     )
+
+    codegen_agent.messages += folder_examples
+
     output = codegen_agent(
-        f"Problem description:\n{problem_descrption}\n UML:\n{uml_code}"
+        f"Help me come up with the organization for the code repository of my project.\nThe problem is {problem_description}.\n"
+        f"The architecture diagram is as follows: {uml_code}"
     )
 
     print(output)
@@ -34,7 +39,7 @@ def folder_structure_gen(problem_descrption: str, uml_code: str) -> str:
     if function_call is None:
         return None
 
-    if function_call["name"] != "submit_folder_structure":
+    if function_call["name"] != "submit_file_structure":
         return None
     else:
         arguments = function_call["arguments"]

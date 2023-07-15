@@ -6,7 +6,7 @@ from plantuml import PlantUML
 
 
 from function.gpt import GPTInstance
-from function.gpt4_examples import gpt4_examples
+from function.gpt4_examples import uml_examples
 
 PLANT_UML_SERVER: PlantUML = PlantUML(url="http://www.plantuml.com/plantuml/img/")
 
@@ -46,7 +46,7 @@ def generate_uml_code(
             }
         ]
     )
-    uml_agent.messages += gpt4_examples
+    uml_agent.messages += uml_examples
 
     retries = 0
 
