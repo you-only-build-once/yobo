@@ -68,5 +68,6 @@ def generate_uml_code(project_requirements: str, framework_requirements: str) ->
 
         return {
             "url": url,
+            "uml_code": uml_code,
             "comments": arguments["context_and_reasoning"],
         }
