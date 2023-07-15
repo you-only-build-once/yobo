@@ -2,11 +2,7 @@ import streamlit as st
 
 from function import uml
 from function import uml_to_code
-
-import urllib.request
-
-from pyvis.network import Network
-from streamlit import components
+import json
 
 
 
@@ -28,7 +24,18 @@ st.set_page_config(
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # func
+def traverse_dict(path, node, cols):
+    options = list(node.keys())
+    options.insert(0, '- Select -')
 
+    selected_option = cols[0].selectbox(f"Level {len(path)}: {' -> '.join(path)}", options, key=f"Level_{len(path)}")
+    
+    if selected_option != '- Select -':
+        path.append(selected_option)
+        new_cols = st.columns([1 for _ in range(len(path) + 1)])
+        for i, p in enumerate(path):
+            new_cols[i].write(p)
+        traverse_dict(path, node[selected_option], new_cols)
 
 # page header 
 st.markdown(
@@ -65,6 +72,7 @@ with uml_block:
             f'<a href="{uml_dict["url"]}" target="_blank"><input type="button" value="load uml"></a>',
             unsafe_allow_html=True
         )
+        uml_code = uml_dict["uml_code"]
     except NameError:
         st.write("waiting for user description... (example output)")
         st.image(image='static/uml_demo.png', width = 750)
@@ -72,8 +80,42 @@ with uml_block:
 
 # file structure 
 st.subheader('Folder Structure')
-uml_dir = uml_to_code.generate_dir_from_uml(uml_dict["uml_code"])
-st.write(uml_dir)
-st.write('________TEST__________')
-# Initialize the network graph
+try:
+    uml_dir_json, uml_dir_text = uml_to_code.generate_dir_from_uml(uml_code)
+    # st.write(uml_dir_json)
+    # st.write(uml_dir_text)
 
+    folder_structure = json.loads(uml_dir_text)
+
+    traverse_dict([], folder_structure, st.columns([1]))
+
+except NameError:
+    json_string = """
+            {
+                "src":{
+                    "main":{
+                        "java":{
+                            "com":{
+                                "meeting":{
+                                    "model":"persona.py",
+                                    "service":{}
+                                }
+                            }
+                        }
+                    },
+                    "resources":{},
+                    "test":{
+                        "java":{
+                            "com":{
+                                "meeting":{
+                                    "service":{}
+                                }
+                            }
+                        }
+                    },
+                    "docs":{}
+                }
+            }
+            """
+    folder_structure = json.loads(json_string)
+    traverse_dict([], folder_structure, st.columns([1]))
