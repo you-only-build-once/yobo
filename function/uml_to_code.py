@@ -12,15 +12,12 @@ def generate_dir_from_uml(uml_code: str) -> object:
     """Given a UML string, queries the chatbot for a JSON representation of
     the associated file directory.
     """
-    # FALLBACK_ERROR_MESSAGE = {
-    #     "url": None,
-    #     "comments": "I'm afraid I cannot generate a file directory at the moment. Please try again",
-    # }
     problem = "create a language model that summarizes a meeting from transcripts and get the keypoints out of it."
-    # out = generate_uml_code(problem, framework_requirements="FastAPI")
-    out_folder = folder_structure_gen(problem, uml_code)
+    out = generate_uml_code(problem, framework_requirements="FastAPI")
+    out_folder = folder_structure_gen(problem, out["uml_code"])
 
-    folder_structure = out_folder["folder_structure"]
+    folder_structure = out_folder["file_structure"]
+    print(folder_structure)
     folder_text = json.dumps(folder_structure)
 
     return folder_structure, folder_text
