@@ -28,7 +28,7 @@ class GPTInstance:
         self.logger.setLevel(logging.INFO)
 
     def __call__(
-        self, input: Optional[str] = None, role: str = "user", *args, **kargs
+        self, input: Optional[str] = None, role: str = "user", *args, **kwargs
     ) -> dict:
 
         history = [*self.messages]
@@ -36,7 +36,9 @@ class GPTInstance:
         if input:
             history.append({"role": role, "content": input})
 
-        output = openai.ChatCompletion.create(model=self.model, messages=history)
+        output = openai.ChatCompletion.create(
+            model=self.model, messages=history, *args, **kwargs
+        )
         output = output.choices[0].message
 
         self.logger.info(output)
