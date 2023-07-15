@@ -13,7 +13,7 @@ def process_uml_code(uml_code: str) -> str:
     return PLANT_UML_SERVER.get_url(uml_code)
 
 
-def generate_uml_code(project_requirements: str) -> Dict:
+def generate_uml_code(project_requirements: str, framework_requirements: str) -> Dict:
 
     FALLBACK_ERROR_MESSAGE = {
         "url": None,
@@ -44,7 +44,8 @@ def generate_uml_code(project_requirements: str) -> Dict:
     )
     uml_agent.messages += gpt4_examples
     output = uml_agent(
-        f"""Hey chatGPT, I want to brainstorm for a new project, the idea is:\n{project_requirements}
+        f"""Hey chatGPT, I want to brainstorm for a new project, the idea is:\n{project_requirements}.
+        These are my rough framework requirements:\n{framework_requirements}
         Can you create an initial diagram (using plantUML) of how I can build it?
         """
     )
