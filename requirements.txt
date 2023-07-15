@@ -4,3 +4,4 @@ plantuml
 openai
 # tiktoken
 python-dotenv
+pyvis

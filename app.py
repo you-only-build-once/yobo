@@ -1,8 +1,13 @@
 import streamlit as st
 
 from function import uml
+from function import uml_to_code
 
 import urllib.request
+
+from pyvis.network import Network
+from streamlit import components
+
 
 
 # page config 
@@ -22,6 +27,9 @@ st.set_page_config(
 #             """
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
+# func
+
+
 # page header 
 st.markdown(
     """
@@ -32,14 +40,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-ui_block, uml_block, folder_struct_block = st.columns([1, 1, 1])
+ui_block, uml_block = st.columns([1, 1])
 with ui_block:
+    st.subheader('Project Description')
     uml_framework_req = st.text_input('Preferred framework structure'
                                       , help = 'please input a rough preferences of your framework structure '
                                       , placeholder='Flask, MongoDB .. ')  
     uml_project_req = st.text_area("Tell me about your project"
                         , help = 'please include the description, key features, functionalitiies of your project'
-                        , placeholder = 'meeting note summarize app using ... '
+                        , placeholder = 'create a language model that summarizes a meeting from transcripts and get the keypoints out of it ... '
                         , height = 450)
     
     submit_button = st.button("Submit")
@@ -47,6 +56,7 @@ with ui_block:
         uml_dict = uml.generate_uml_code(uml_project_req, uml_framework_req)
 
 with uml_block:
+    st.subheader('UML Diagram')
     try:
         st.write(uml_dict["comments"])
         st.image(image=uml_dict["url"]
@@ -56,5 +66,14 @@ with uml_block:
             unsafe_allow_html=True
         )
     except NameError:
-        st.write("waiting for user description...")
+        st.write("waiting for user description... (example output)")
+        st.image(image='static/uml_demo.png', width = 750)
     
+
+# file structure 
+st.subheader('Folder Structure')
+uml_dir = uml_to_code.generate_dir_from_uml(uml_dict["uml_code"])
+st.write(uml_dir)
+st.write('________TEST__________')
+# Initialize the network graph
+
