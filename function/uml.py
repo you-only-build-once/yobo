@@ -3,7 +3,7 @@ from typing import Dict
 
 from plantuml import PlantUML
 
-from gpt import GPTInstance
+from function.gpt import GPTInstance
 
 PLANT_UML_SERVER: PlantUML = PlantUML(url="http://www.plantuml.com/plantuml/img/")
 
