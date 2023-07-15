@@ -40,7 +40,7 @@ with ui_block:
     
     submit_button = st.button("Submit")
     if submit_button:
-        uml_dict = uml.generate_uml_code(uml_project_req)
+        uml_dict = uml.generate_uml_code(uml_project_req, uml_framework_req)
 
 with uml_block:
     try:
