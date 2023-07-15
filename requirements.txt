@@ -2,5 +2,5 @@
 streamlit
 plantuml
 openai
-tiktoken
+# tiktoken
 python-dotenv
