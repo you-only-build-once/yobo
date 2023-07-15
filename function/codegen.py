@@ -3,8 +3,9 @@ import json
 from function.gpt import GPTInstance
 
 
-def codegen(uml_code: str) -> str:
+def codegen(problem_descrption: str, uml_code: str) -> str:
     codegen_agent = GPTInstance(
+        system_prompt="Given a UML diagram and problem description, generate the folder structure for the repo to implement it",
         functions=[
             {
                 "name": "submit_folder_structure",
@@ -20,10 +21,10 @@ def codegen(uml_code: str) -> str:
                     "required": ["folder_structure"],
                 },
             }
-        ]
+        ],
     )
     output = codegen_agent(
-        f"Here is the uml code generate a folder structure: {uml_code} and submit it"
+        f"Problem description:\n{problem_descrption}\n UML:\n{uml_code}"
     )
 
     print(output)
