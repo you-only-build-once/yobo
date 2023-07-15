@@ -10,14 +10,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# hide_st_style = """
-#             <style>
-#             MainMenu {visibility: hidden;}
-#             footer {visibility: hidden;}
-#             header {visibility: hidden;}
-#             </style>
-#             """
-# st.markdown(hide_st_style, unsafe_allow_html=True)
+hide_st_style = """
+            <style>
+            MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # page header 
 st.markdown(
@@ -40,7 +40,7 @@ with ui_block:
     
     submit_button = st.button("Submit")
     if submit_button:
-        uml_dict = uml.generate_uml_code(uml_project_req)
+        uml_dict = uml.generate_uml_code(uml_project_req, uml_framework_req)
 
 with uml_block:
     try:
