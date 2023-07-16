@@ -14,21 +14,17 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# hide_st_style = """
-#             <style>
-#             MainMenu {visibility: hidden;}
-#             footer {visibility: hidden;}
-#             header {visibility: hidden;}
-#             </style>
-#             """
-# st.markdown(hide_st_style, unsafe_allow_html=True)
+hide_st_style = """
+            <style>
+            MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # func
-# def display_tree(data, level=0):
-#     if isinstance(data, dict):
-#         for key in data.keys():
-#             st.text(' ' * level * 2 + str(key))
-#             display_tree(data[key], level + 1)
+
 def display_tree(data, path):
     if path:
         for key in path:
