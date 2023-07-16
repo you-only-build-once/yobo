@@ -1,7 +1,7 @@
 import streamlit as st
 
 from function import uml
-from function import uml_to_code
+from function import folder_structre_gen
 import json
 
 
@@ -81,11 +81,11 @@ with uml_block:
 # file structure 
 st.subheader('Folder Structure')
 try:
-    uml_dir_json, uml_dir_text = uml_to_code.generate_dir_from_uml(uml_code)
+    uml_dir_json = folder_structre_gen.folder_structure_gen(uml_project_req, uml_code)
     # st.write(uml_dir_json)
     # st.write(uml_dir_text)
 
-    folder_structure = json.loads(uml_dir_text)
+    folder_structure = uml_dir_json#json.loads(uml_dir_text)
 
     traverse_dict([], folder_structure, st.columns([1]))
 
