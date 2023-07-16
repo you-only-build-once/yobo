@@ -24,18 +24,21 @@ st.set_page_config(
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # func
-def traverse_dict(path, node, cols):
-    options = list(node.keys())
-    options.insert(0, '- Select -')
-
-    selected_option = cols[0].selectbox(f"Level {len(path)}: {' -> '.join(path)}", options, key=f"Level_{len(path)}")
-    
-    if selected_option != '- Select -':
-        path.append(selected_option)
-        new_cols = st.columns([1 for _ in range(len(path) + 1)])
-        for i, p in enumerate(path):
-            new_cols[i].write(p)
-        traverse_dict(path, node[selected_option], new_cols)
+# def display_tree(data, level=0):
+#     if isinstance(data, dict):
+#         for key in data.keys():
+#             st.text(' ' * level * 2 + str(key))
+#             display_tree(data[key], level + 1)
+def display_tree(data, path):
+    if path:
+        for key in path:
+            data = data[key]
+    folder = st.selectbox('Select a folder', list(data.keys()))
+    if isinstance(data[folder], dict) and data[folder] != {}:
+        st.write('Files and subfolders in the selected folder:')
+        st.write(list(data[folder].keys()))
+    else:
+        st.write('No files or subfolders in the selected folder.')
 
 # page header 
 st.markdown(
@@ -81,41 +84,20 @@ with uml_block:
 # file structure 
 st.subheader('Folder Structure')
 try:
-    uml_dir_json, uml_dir_text = uml_to_code.generate_dir_from_uml(uml_code)
-    # st.write(uml_dir_json)
-    # st.write(uml_dir_text)
-
-    folder_structure = json.loads(uml_dir_text)
-
-    traverse_dict([], folder_structure, st.columns([1]))
+    uml_dir_json, uml_dir_text = uml_to_code.generate_dir_from_uml(uml_dict["uml_code"])
+    st.write(uml_dir_json)
+    st.write(uml_dir_text)
 
 except NameError:
-    json_string = """
-            {
-                "src":{
-                    "main":{
-                        "java":{
-                            "com":{
-                                "meeting":{
-                                    "model":"persona.py",
-                                    "service":{}
-                                }
-                            }
-                        }
-                    },
-                    "resources":{},
-                    "test":{
-                        "java":{
-                            "com":{
-                                "meeting":{
-                                    "service":{}
-                                }
-                            }
-                        }
-                    },
-                    "docs":{}
-                }
-            }
-            """
-    folder_structure = json.loads(json_string)
-    traverse_dict([], folder_structure, st.columns([1]))
+    st.write("waiting for user description... (example output)")
+
+    example_uml = """ 
+        {"root": {"transcript_dataset": {"init.py": {}, "data_processing.py": {}, "tests": {"init.py": {}, "test_data_processing.py": {}}}, "language_model": {"init.py": {}, "model.py": {}, "preprocessing.py": {}, "tests": {"init.py": {}, "test_model.py": {}}}, "summarization_module": {"init.py": {}, "summarizer.py": {}, "tests": {"init.py": {}, "test_summarizer.py": {}}}, "key_point_extraction_module": {"init.py": {}, "extractor.py": {}, "tests": {"init.py": {}, "test_extractor.py": {}}}, "config": {"settings.py": {}}, "README.md": {}}}
+                """
+
+    # folder_structure = json.loads(uml_dir_text)
+    data = json.loads('{"root": {"transcript_dataset": {"init.py": {}, "data_processing.py": {}, "tests": {"init.py": {}, "test_data_processing.py": {}}}, "language_model": {"init.py": {}, "model.py": {}, "preprocessing.py": {}, "tests": {"init.py": {}, "test_model.py": {}}}, "summarization_module": {"init.py": {}, "summarizer.py": {}, "tests": {"init.py": {}, "test_summarizer.py": {}}}, "key_point_extraction_module": {"init.py": {}, "extractor.py": {}, "tests": {"init.py": {}, "test_extractor.py": {}}}, "config": {"settings.py": {}}, "README.md": {}}}')
+
+    # Setup columns
+    display_tree(data, ["root"])
+
