@@ -68,15 +68,19 @@ def folder_structure_gen(problem_description: str, uml_code: str, max_retries: i
         return FALLBACK_ERROR_MESSAGE
 
 def download_folder_structure(folder_dir:json):
-    for key in folder_dir:
-        if isinstance(folder_dir[key], dict):
-            if len(folder_dir[key]) == 0:
-                with open(key, 'w') as fp:
-                    continue
+    os.mkdir("user_gen_app")
+    os.chdir("user_gen_app")
+    def make_subdirs(folder_dir:json):
+        for key in folder_dir:
+            if isinstance(folder_dir[key], dict):
+                if len(folder_dir[key]) == 0:
+                    with open(key, 'w') as fp:
+                        continue
+                else:
+                    os.mkdir(key)
+                os.chdir(key)
+                make_subdirs(folder_dir[key])
+                os.chdir('..')
             else:
-                os.mkdir(key)
-            os.chdir(key)
-            download_folder_structure(folder_dir[key])
-            os.chdir('..')
-        else:
-            os.mkdir(folder_dir[key])
+                os.mkdir(folder_dir[key])
+    make_subdirs(folder_dir)
