@@ -3,6 +3,7 @@ import streamlit as st
 from function import uml
 from function import folder_structre_gen
 import json
+import os
 
 # create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
@@ -14,14 +15,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-hide_st_style = """
-            <style>
-            MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
+# hide_st_style = """
+#             <style>
+#             MainMenu {visibility: hidden;}
+#             footer {visibility: hidden;}
+#             header {visibility: hidden;}
+#             </style>
+#             """
+# st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # func
 
@@ -65,9 +66,9 @@ with ui_block:
 
 with uml_block:
     st.subheader('UML Diagram')
-    uml_dict = st.session_state.get('uml_dict', None) # retrieve uml_dict from session state
 
-    try:
+    uml_dict = st.session_state.get('uml_dict', None) # retrieve uml_dict from session state
+    if uml_dict is not None:
         st.write(uml_dict["comments"])
         st.image(image=uml_dict["url"]
                 , width = 750)
@@ -76,7 +77,8 @@ with uml_block:
             unsafe_allow_html=True
         )
         uml_code = uml_dict["uml_code"]
-    except NameError:
+
+    else:
         st.write("waiting for user description... (example output)")
         st.image(image='static/uml_demo.png', width = 750)
     
