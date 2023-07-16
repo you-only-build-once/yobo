@@ -1,6 +1,6 @@
 import json
 from function.uml import generate_uml_code
-from function.folder_structre_gen import folder_structure_gen
+from function.folder_structre_gen import folder_structure_gen, download_folder_structure
 from function.file_gen import codegen
 
 problem = "create a language model that summarizes a meeting from transcripts and get the keypoints out of it."
@@ -15,3 +15,5 @@ folder_text = json.dumps(folder_structure)
 
 # for file in folder_text.key():
 #     if
+
+# download_folder_structure(folder_structure)

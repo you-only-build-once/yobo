@@ -2,6 +2,7 @@ import json
 
 from function.gpt import GPTInstance
 from function.gpt4_examples import folder_examples
+import os
 
 
 def folder_structure_gen(problem_description: str, uml_code: str, max_retries: int = 3) -> str:
@@ -65,3 +66,17 @@ def folder_structure_gen(problem_description: str, uml_code: str, max_retries: i
             pass
 
         return FALLBACK_ERROR_MESSAGE
+
+def download_folder_structure(folder_dir:json):
+    for key in folder_dir:
+        if isinstance(folder_dir[key], dict):
+            if len(folder_dir[key]) == 0:
+                with open(key, 'w') as fp:
+                    continue
+            else:
+                os.mkdir(key)
+            os.chdir(key)
+            download_folder_structure(folder_dir[key])
+            os.chdir('..')
+        else:
+            os.mkdir(folder_dir[key])
