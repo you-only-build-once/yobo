@@ -3,8 +3,9 @@ import streamlit as st
 from function import uml
 from function import folder_structre_gen
 import json
+import os
 
-
+# create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
 # page config 
 st.set_page_config(
@@ -24,11 +25,7 @@ st.set_page_config(
 # st.markdown(hide_st_style, unsafe_allow_html=True)
 
 # func
-# def display_tree(data, level=0):
-#     if isinstance(data, dict):
-#         for key in data.keys():
-#             st.text(' ' * level * 2 + str(key))
-#             display_tree(data[key], level + 1)
+
 def display_tree(data, path):
     if path:
         for key in path:
@@ -64,10 +61,14 @@ with ui_block:
     submit_button = st.button("Submit")
     if submit_button:
         uml_dict = uml.generate_uml_code(uml_project_req, uml_framework_req)
+        st.session_state['uml_dict'] = uml_dict 
+
 
 with uml_block:
     st.subheader('UML Diagram')
-    try:
+
+    uml_dict = st.session_state.get('uml_dict', None) # retrieve uml_dict from session state
+    if uml_dict is not None:
         st.write(uml_dict["comments"])
         st.image(image=uml_dict["url"]
                 , width = 750)
@@ -76,7 +77,8 @@ with uml_block:
             unsafe_allow_html=True
         )
         uml_code = uml_dict["uml_code"]
-    except NameError:
+
+    else:
         st.write("waiting for user description... (example output)")
         st.image(image='static/uml_demo.png', width = 750)
     
@@ -85,8 +87,11 @@ with uml_block:
 st.subheader('Folder Structure')
 try:
     uml_dir_json = folder_structre_gen.folder_structure_gen(uml_project_req, uml_code)
+    st.session_state['uml_dir_json'] = uml_dir_json 
+    uml_dict_session_state = st.session_state.get('uml_dir_json', None)
     # st.write(uml_dir_json)
-    # st.write(uml_dir_text)
+
+    display_tree(uml_dict_session_state, ["root"])
 
     # folder_structure = json.loads(uml_dir_text)
 
