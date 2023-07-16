@@ -55,3 +55,37 @@ folder_examples = [
         },
     },
 ]
+
+endpoint_examples = [
+    {
+        "role": "user",
+        "content": """With the following information, tell me which endpoints should be implemented in each file (be specific and use type hints), and explain the relationships between them.
+        The problem is 'create a chatbot to prepare the perfect coffee, it would be hooked to an espresso machine'.
+        The architecture diagram is as follows: @startuml\ntitle Chatbot for Smart Espresso Machine\n\nactor User\nparticipant \"User Interface (UI)\" as UI\nparticipant \"Chatbot Service\" as CS\ndatabase \"Coffee Preferences DB\" as CPDB\nparticipant \"Espresso Machine Interface\" as EMI\nparticipant \"Smart Espresso Machine\" as SEM\n\nUser -> UI : Input preferences\nUI -> CS : Passes user input\nCS -> CPDB : Retrieves/Saves preferences\nCS -> EMI : Sends brewing instructions\nEMI -> SEM : Controls espresso machine\nSEM -> EMI : Reports status\nEMI -> CS : Returns status\nCS -> UI : Updates user\nUI -> User : Shows update\n@enduml
+        And this is the file structure:
+        'root': {'chatbot_service': {'__init__.py': {}, 'models.py': {}, 'handlers.py': {}, 'utils.py': {}, 'tests': {'__init__.py': {}, 'test_models.py': {}, 'test_handlers.py': {}}}, 'user_interface': {'__init__.py': {}, 'views.py': {}, 'forms.py': {}, 'static': {'css': {}, 'js': {}}, 'templates': {}, 'tests': {'__init__.py': {}, 'test_views.py': {}}}, 'coffee_preferences_db': {'__init__.py': {}, 'models.py': {}, 'data_access.py': {}, 'tests': {'__init__.py': {}, 'test_data_access.py': {}}}, 'espresso_machine_interface': {'__init__.py': {}, 'api.py': {}, 'utils.py': {}, 'tests': {'__init__.py': {}, 'test_api.py': {}}}, 'config': {'settings.py': {}}, 'README.md': {}}""",
+    },
+    {
+        "role": "assistant",
+        "content": None,
+        "function_call": {
+            "name": "submit_endpoints",
+            "arguments": '{"endpoints": [{"file_path": "user_interface/views.py", "contents": "from flask import Flask, render_template\\napp = Flask(__name__)\\n\\n@app.route(\'/\')\\ndef chatbot_interface() -> str:\\n    return render_template(\'chatbot_interface.html\')\\n    \\n@app.route(\'/update\', methods=[\'POST\'])\\ndef update_interface() -> str:\\n    # extract update from request and send to interface\\n    pass\\n"}, {"file_path": "chatbot_service/handlers.py", "contents": "def handle_user_input(input: str) -> None:\\n# process user input\\n    pass\\n        \\ndef save_preferences(preferences: dict) -> None:\\n    # save user preferences to db\\n    pass\\n                \\ndef retrieve_preferences(user_id: str) -> dict:\\n    # retrieve user preferences from db\\n    pass\\n                        \\ndef send_brewing_instructions(instructions: dict) -> None:\\n    # send instructions to EMI\\n    pass\\n"}, {"file_path": "coffee_preferences_db/data_access.py", "contents": "def get_preferences(user_id: str) -> dict:\\n    # retrieve user preferences from db\\n    pass\\n        \\ndef set_preferences(user_id: str, preferences: dict) -> None:\\n    # save user preferences to db\\n    pass\\n"}, {"file_path": "espresso_machine_interface/api.py", "contents": "def send_instructions(instructions: dict) -> None:\\n    # send instructions to machine\\n    pass\\n        \\ndef get_status() -> dict:\\n    # retrieve status from machine\\n    pass\\n"}]}',
+        },
+    },
+    {
+        "role": "user",
+        "content": """With the following information, tell me which endpoints should be implemented in each file (be specific and use type hints), and explain the relationships between them.
+        The problem is create a language model that will whiteboard with the user, and then generate the code for that.
+        The architecture diagram is as follows: @startuml\n\nparticipant User\nparticipant "Language Model (ChatGPT)" as LM\nparticipant "Image Recognition/ Diagramming System" as IR\nparticipant "Compiler / Code Generator" as CG\n\nUser -> LM : Provides project requirements\nactivate LM\nLM -> User : Questions for more details\nUser -> LM : Responds to questions\ndeactivate LM\n\nUser -> IR : Draws on whiteboard\nactivate IR\nIR -> User : Confirms understanding of diagram\nUser -> IR : Makes changes if necessary\ndeactivate IR\n\nIR -> LM : Sends diagram details\nactivate LM\nLM -> IR : Asks for clarifications if necessary\nIR -> LM : Provides clarifications\ndeactivate LM\n\nLM -> CG : Sends refined requirements and diagram details\nactivate CG\nCG -> LM : Asks for clarifications if necessary\nLM -> CG : Provides clarifications\ndeactivate CG\n\nCG -> User : Generates initial code\nUser -> CG : Requests changes if necessary\nCG -> User : Makes changes and provides updated code\n\n@enduml\n
+        And this is the file structure:\n{\'file_structure\': {\'root\': {\'language_model\': {\'__init__.py\': {}, \'models.py\': {}, \'handlers.py\': {}, \'utils.py\': {}, \'tests\': {\'__init__.py\': {}, \'test_models.py\': {}, \'test_handlers.py\': {}}}, \'image_recognition\': {\'__init__.py\': {}, \'api.py\': {}, \'utils.py\': {}, \'tests\': {\'__init__.py\': {}, \'test_api.py\': {}}}, \'compiler\': {\'__init__.py\': {}, \'code_generator.py\': {}, \'utils.py\': {}, \'tests\': {\'__init__.py\': {}, \'test_code_generator.py\': {}}}, \'user_interface\': {\'__init__.py\': {}, \'views.py\': {}, \'forms.py\': {}, \'static\': {\'css\': {}, \'js\': {}}, \'templates\': {}, \'tests\': {\'__init__.py\': {}, \'test_views.py\': {}}}, \'config\': {\'settings.py\': {}}, \'README.md\': {}}}}""",
+    },
+    {
+        "role": "assistant",
+        "content": None,
+        "function_call": {
+            "name": "submit_endpoints",
+            "arguments": '{"endpoints": [{"file_path": "language_model/chatgpt/model.py", "contents": "def get_requirements(user_input: str) -> Dict[str, Any]:\\n    pass\\n    \\ndef ask_for_details(user_input: str) -> Dict[str, Any]:\\n    pass\\n        \\ndef get_diagram_clarification(diagram_details: Dict[str, Any]) -> Dict[str, Any]:\\n    pass\\n            \\ndef get_code_clarification(code_details: Dict[str, Any]) -> Dict[str, Any]:\\n    pass\\n"}, {"file_path": "image_recognition/diagramming_system/model.py", "contents": "def recognize_diagram(image: Image) -> Dict[str, Any]:\\n    pass\\n    \\ndef confirm_understanding(user_input: str) -> Dict[str, Any]:\\n    pass\\n        \\ndef provide_clarifications(clarification_request: Dict[str, Any]) -> Dict[str, Any]:\\n    pass\\n"}, {"file_path": "compiler/code_generator/model.py", "contents": "def generate_code(requirements: Dict[str, Any], diagram_details: Dict[str, Any]) -> str:\\n    pass\\n    \\ndef make_changes(code: str, user_request: Dict[str, Any]) -> str:\\n    pass\\n        \\ndef provide_clarifications(clarification_request: Dict[str, Any]) -> Dict[str, Any]:\\n    pass\\n"}]}',
+        },
+    },
+]
