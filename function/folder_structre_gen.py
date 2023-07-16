@@ -4,7 +4,12 @@ from function.gpt import GPTInstance
 from function.gpt4_examples import folder_examples
 
 
-def folder_structure_gen(problem_description: str, uml_code: str) -> str:
+def folder_structure_gen(problem_description: str, uml_code: str, max_retries: int = 3) -> str:
+    FALLBACK_ERROR_MESSAGE = {
+        "url": None,
+        "comments": "I'm afraid I cannot generate a file directory at the moment. Please try again",
+    }
+
     codegen_agent = GPTInstance(
         system_prompt="You are a helpful assistant.",
         functions=[
@@ -27,22 +32,32 @@ def folder_structure_gen(problem_description: str, uml_code: str) -> str:
 
     codegen_agent.messages += folder_examples
 
-    output = codegen_agent(
-        f"Help me come up with the organization for the code repository of my project.\nThe problem is {problem_description}.\n"
-        f"The architecture diagram is as follows: {uml_code}"
-    )
+    retries = 0
 
-    print(output)
+    while retries < max_retries:
+        try:
+            output = codegen_agent(
+                f"Help me come up with the organization for the code repository of my project.\nThe problem is {problem_description}.\n"
+                f"The architecture diagram is as follows: {uml_code}"
+            )
 
-    function_call = output.get("function_call", None)
+            print(output)
 
-    if function_call is None:
-        return None
+            function_call = output.get("function_call", None)
 
-    if function_call["name"] != "submit_file_structure":
-        return None
-    else:
-        arguments = function_call["arguments"]
-        arguments = json.loads(arguments)
+            if function_call is None:
+                return None
 
-        return arguments
+            if function_call["name"] != "submit_file_structure":
+                return None
+            else:
+                arguments = function_call["arguments"]
+                arguments = json.loads(arguments)
+
+                return arguments
+        except json.JSONDecodeError as e:
+            retries += 1
+            codegen_agent.logger.warning("ChatGPT response unsuficient. Retrying...")
+            pass
+
+        return FALLBACK_ERROR_MESSAGE

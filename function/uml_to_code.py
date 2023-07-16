@@ -13,8 +13,8 @@ def generate_dir_from_uml(uml_code: str) -> object:
     the associated file directory.
     """
     problem = "create a language model that summarizes a meeting from transcripts and get the keypoints out of it."
-    out = generate_uml_code(problem, framework_requirements="FastAPI")
-    out_folder = folder_structure_gen(problem, out["uml_code"])
+    # out = generate_uml_code(problem, framework_requirements="FastAPI")
+    out_folder = folder_structure_gen(problem, uml_code)
 
     folder_structure = out_folder["file_structure"]
     print(folder_structure)
