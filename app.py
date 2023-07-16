@@ -4,7 +4,7 @@ from function import uml
 from function import folder_structre_gen
 import json
 
-
+# create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
 # page config 
 st.set_page_config(
@@ -64,9 +64,13 @@ with ui_block:
     submit_button = st.button("Submit")
     if submit_button:
         uml_dict = uml.generate_uml_code(uml_project_req, uml_framework_req)
+        st.session_state['uml_dict'] = uml_dict 
+
 
 with uml_block:
     st.subheader('UML Diagram')
+    uml_dict = st.session_state.get('uml_dict', None) # retrieve uml_dict from session state
+
     try:
         st.write(uml_dict["comments"])
         st.image(image=uml_dict["url"]
@@ -85,8 +89,11 @@ with uml_block:
 st.subheader('Folder Structure')
 try:
     uml_dir_json = folder_structre_gen.folder_structure_gen(uml_project_req, uml_code)
+    st.session_state['uml_dir_json'] = uml_dir_json 
+    uml_dict_session_state = st.session_state.get('uml_dir_json', None)
     # st.write(uml_dir_json)
-    # st.write(uml_dir_text)
+
+    display_tree(uml_dict_session_state, ["root"])
 
     # folder_structure = json.loads(uml_dir_text)
 
