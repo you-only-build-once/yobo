@@ -2,6 +2,7 @@ import streamlit as st
 
 from function import uml
 from function import folder_structre_gen
+
 import json
 import os
 
@@ -92,6 +93,11 @@ try:
     # st.write(uml_dir_json)
 
     display_tree(uml_dict_session_state, ["root"])
+
+    download_folder = st.button("Download Folder")
+    if download_folder:
+        folder_structre_gen.download_folder_structure(uml_dir_json)
+    
 
     # folder_structure = json.loads(uml_dir_text)
 
