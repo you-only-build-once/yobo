@@ -65,7 +65,7 @@ def folder_structure_gen(problem_description: str, uml_code: str, max_retries: i
             codegen_agent.logger.warning("ChatGPT response unsuficient. Retrying...")
             pass
 
-        return FALLBACK_ERROR_MESSAGE
+    return FALLBACK_ERROR_MESSAGE
 
 def download_folder_structure(folder_dir:json):
     for key in folder_dir:

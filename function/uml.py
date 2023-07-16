@@ -89,4 +89,4 @@ def generate_uml_code(
             uml_agent.logger.warning("ChatGPT response unsuficient. Retrying...")
             pass
 
-        return FALLBACK_ERROR_MESSAGE
+    return FALLBACK_ERROR_MESSAGE
