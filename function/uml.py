@@ -14,9 +14,9 @@ PLANT_UML_SERVER: PlantUML = PlantUML(url="http://www.plantuml.com/plantuml/img/
 def process_uml_code(uml_code: str) -> str:
     return PLANT_UML_SERVER.get_url(uml_code)
 
-
+# project_req, preferred_lang, preferred_ts, preferred_db, preferred_int, 
 def generate_uml_code(
-    project_requirements: str, framework_requirements: str, max_retries: int = 3
+    project_requirements: str, framework_lang: str, framework_ts: str, framework_db: str, framework_int: str, max_retries: int = 3
 ) -> Dict:
 
     FALLBACK_ERROR_MESSAGE = {
@@ -55,7 +55,13 @@ def generate_uml_code(
         try:
             output = uml_agent(
                 f"""Hey chatGPT, I want to brainstorm for a new project, the idea is:\n{project_requirements}.
-                These are my rough framework requirements:\n{framework_requirements}
+                These are some preferred programming languages, tech stack, database, integration user are already familiar with, 
+                but keep in mind this is only a preference, do not include it or use it if it doesn't make sense:\n
+                    1. preferred programming language = {framework_lang} \n
+                    2. preferred tech stack = {framework_ts} \n
+                    3. preferred database (if any) = {framework_db} \n
+                    4. preferred integration (if any) = {framework_int} \n
+
                 Can you create an initial diagram (using plantUML) of how I can build it?
                 """
             )
