@@ -157,9 +157,14 @@ if uml_dict_session_state is not None:
     uml_dict_session_state = st.session_state.get('uml_dir_json', None)
     display_folder_structure.display_tree(uml_dict_session_state, ["root"])
 
-    download_folder = st.button("Download Folder")
-    if download_folder:
-        folder_structre_gen.download_folder_structure(uml_dir_json)
+    st.download_button(
+        data=folder_structre_gen.download_folder_structure(uml_dict_session_state),
+        label="Download Repository",
+        file_name="generated_repo.zip",
+        mime="application/zip",
+        on_click=folder_structre_gen.download_folder_structure,
+        args=(uml_dict_session_state,)
+    )
 
 else:
     st.write("(example output) ... waiting for user description ...")

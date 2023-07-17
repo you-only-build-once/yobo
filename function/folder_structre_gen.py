@@ -3,6 +3,9 @@ import json
 from function.gpt import GPTInstance
 from function.gpt4_examples import folder_examples
 import os
+import zipfile
+import io
+
 
 
 def folder_structure_gen(problem_description: str, uml_code: str, max_retries: int = 3) -> str:
@@ -67,20 +70,22 @@ def folder_structure_gen(problem_description: str, uml_code: str, max_retries: i
 
     return FALLBACK_ERROR_MESSAGE
 
-def download_folder_structure(folder_dir:json):
-    os.mkdir("user_gen_app")
-    os.chdir("user_gen_app")
-    def make_subdirs(folder_dir:json):
-        for key in folder_dir:
-            if isinstance(folder_dir[key], dict):
-                if len(folder_dir[key]) == 0:
-                    with open(key, 'w') as fp:
-                        continue
-                else:
-                    os.mkdir(key)
-                os.chdir(key)
-                make_subdirs(folder_dir[key])
-                os.chdir('..')
-            else:
-                os.mkdir(folder_dir[key])
-    make_subdirs(folder_dir)
+
+def create_nested_folders_in_memory(base_folder, folder_structure):
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_STORED) as zipf:
+        def add_files(parent_path, folder_dir):
+            for key in folder_dir:
+                if isinstance(folder_dir[key], dict):
+                    if len(folder_dir[key]) == 0:
+                        file_path = os.path.join(parent_path, key)
+                        zipf.writestr(file_path, b'')
+                    else:
+                        add_files(os.path.join(parent_path, key), folder_dir[key])
+        add_files(base_folder, folder_structure)
+    buffer.seek(0)
+    return buffer
+
+def download_folder_structure(folder_dir: dict):
+    buffer = create_nested_folders_in_memory("", folder_dir)
+    return buffer
