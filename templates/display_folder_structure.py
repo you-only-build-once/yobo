@@ -7,6 +7,7 @@ def display_tree(data, path):
     folder = st.selectbox('Select a folder', list(data.keys()))
     if isinstance(data[folder], dict) and data[folder] != {}:
         st.write('Files and subfolders in the selected folder:')
-        st.write(list(data[folder].keys()))
+        st.write(data[folder])
+        
     else:
         st.write('No files or subfolders in the selected folder.')

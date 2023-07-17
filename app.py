@@ -4,6 +4,7 @@ from templates import display_folder_structure
 
 from function import uml
 from function import folder_structre_gen
+from function import endpoint_gen
 
 import json
 import os
@@ -156,6 +157,26 @@ uml_dict_session_state = st.session_state.get('uml_dir_json', None)
 if uml_dict_session_state is not None:
     uml_dict_session_state = st.session_state.get('uml_dir_json', None)
     display_folder_structure.display_tree(uml_dict_session_state, ["root"])
+
+
+    gen_pseudo_buttom = st.button("Approve folder structure and generate pseudo code")
+    if gen_pseudo_buttom:
+        pseudo_code_json = endpoint_gen.endpoint_generation(dev_project_req, uml_dict['uml_code'], uml_dict_session_state)
+        st.session_state['pseudo_code_json'] = pseudo_code_json 
+    
+    pseudo_code_json = st.session_state.get('pseudo_code_json', None)
+
+
+    if pseudo_code_json is not None:
+        for i in range(len(pseudo_code_json["endpoints"])):
+            main_folder = pseudo_code_json["endpoints"][i]['file_path'].split('/')[0]
+            file_name = pseudo_code_json["endpoints"][i]['file_path'].split('/')[1]
+            code = pseudo_code_json["endpoints"][i]['contents']
+            uml_dict_session_state['root'][main_folder][file_name] = code
+        
+    else:
+        st.write("... start pseudo code generation ...")
+
 
     st.download_button(
         data=folder_structre_gen.download_folder_structure(uml_dict_session_state),
