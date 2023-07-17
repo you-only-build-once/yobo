@@ -126,8 +126,6 @@ with ui_block:
     
     text_len = len(dev_project_req.split())
     MAX_LEN = 50
-
-# Check if the length exceeds the limit
     if text_len > MAX_LEN:
         st.warning(f"Exceeded character limit! maximum word is {MAX_LEN}.")
     else:
