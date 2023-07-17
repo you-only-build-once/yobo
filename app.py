@@ -17,15 +17,15 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-# hide_st_style = """
-#             <style>
-#              MainMenu {visibility: hidden;}
-#             footer {visibility: hidden;}
-#             header {visibility: hidden;}
-#             body {margin-top: -20px;} /* Adjust this value as needed */
-#             </style>
-#             """
-# st.markdown(hide_st_style, unsafe_allow_html=True)
+hide_st_style = """
+            <style>
+            MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            body {margin-top: -20px;} /* Adjust this value as needed */
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 ###### page header ###############################################################################################################################
@@ -107,7 +107,7 @@ with ui_block:
     col1_integration, col2_integration = st.columns([3, 5])
     with col1_integration:
         st.write("")
-        st.write("Any integration??")
+        st.write("Add integration?")
     with col2_integration:
         dev_pref_integration = st.selectbox('', ("N/A","Stripe (Payment Gateway)", "PayPal (Payment Gateway)", "Braintree (Payment Gateway)",  "Google Maps API",
                                                         "Twitter API", "Facebook Graph API", "OAuth 2.0", "JSON Web Tokens (JWT)", "OpenID Connect", "Amazon Web Services (AWS)",
@@ -121,7 +121,7 @@ with ui_block:
     dev_project_req = st.text_area("Tell me about your project"
                         , help = 'please include the description, key features, functionalitiies of your project'
                         , placeholder = 'create a language model that summarizes a meeting from transcripts and get the keypoints out of it ... '
-                        , height = 450)
+                        , height = 300)
     
     submit_button = st.button("Submit")
     if submit_button:
@@ -145,7 +145,7 @@ with uml_block:
         )
 
     else:
-        st.write("waiting for user description... (example output)")
+        st.write("(example output) ... waiting for user description ...")
         st.image(image='static/uml_demo.png', width = 750)
     
 
@@ -162,7 +162,7 @@ if uml_dict_session_state is not None:
         folder_structre_gen.download_folder_structure(uml_dir_json)
 
 else:
-    st.write("waiting for user description... (example output)")
+    st.write("(example output) ... waiting for user description ...")
     example_uml = """ 
         {"root": {"transcript_dataset": {"init.py": {}, "data_processing.py": {}, "tests": {"init.py": {}, "test_data_processing.py": {}}}, "language_model": {"init.py": {}, "model.py": {}, "preprocessing.py": {}, "tests": {"init.py": {}, "test_model.py": {}}}, "summarization_module": {"init.py": {}, "summarizer.py": {}, "tests": {"init.py": {}, "test_summarizer.py": {}}}, "key_point_extraction_module": {"init.py": {}, "extractor.py": {}, "tests": {"init.py": {}, "test_extractor.py": {}}}, "config": {"settings.py": {}}, "README.md": {}}}
                 """
