@@ -124,8 +124,17 @@ with ui_block:
                         , placeholder = 'create a language model that summarizes a meeting from transcripts and get the keypoints out of it ... '
                         , height = 300)
     
+    text_len = len(dev_project_req.split())
+    MAX_LEN = 50
+
+# Check if the length exceeds the limit
+    if text_len > MAX_LEN:
+        st.warning(f"Exceeded character limit! maximum word is {MAX_LEN}.")
+    else:
+        pass
+    
     submit_button = st.button("Submit")
-    if submit_button:
+    if submit_button and (text_len < MAX_LEN):
         uml_dict = uml.generate_uml_code(dev_project_req, dev_pref_lang, dev_pref_ts, dev_pref_db, dev_pref_integration)
         st.session_state['uml_dict'] = uml_dict 
         uml_dir_json = folder_structre_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])

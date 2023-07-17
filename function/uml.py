@@ -54,9 +54,8 @@ def generate_uml_code(
 
         try:
             output = uml_agent(
-                f"""Hey chatGPT, I want to brainstorm for a new project, the idea is:\n{project_requirements}.
-                These are some preferred programming languages, tech stack, database, integration user are already familiar with, 
-                but keep in mind this is only a preference, do not include it or use it if it doesn't make sense:\n
+                f"""I want to brainstorm for a new project, the idea is:\n{project_requirements}.
+                These are some developer's technology preference to include, but keep in mind this is only a preference, do not include it or use it if it doesn't make sense:\n
                     1. preferred programming language = {framework_lang} \n
                     2. preferred tech stack = {framework_ts} \n
                     3. preferred database (if any) = {framework_db} \n
