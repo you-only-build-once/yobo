@@ -4,6 +4,7 @@ from templates import display_folder_structure
 
 from function import uml
 from function import folder_structre_gen
+from function.endpoint_gen import endpoint_generation
 
 import json
 import os
@@ -153,8 +154,18 @@ with uml_block:
 st.subheader('Folder Structure')
 
 uml_dict_session_state = st.session_state.get('uml_dir_json', None)
+
 if uml_dict_session_state is not None:
     uml_dict_session_state = st.session_state.get('uml_dir_json', None)
+    endpoints = endpoint_generation(dev_project_req, uml_dict['uml_code'], uml_dict_session_state)
+    
+    for i in range(len(endpoints["endpoints"])):
+        main_folder = endpoints["endpoints"][i]['file_path'].split('/')[0]
+        file_name = endpoints["endpoints"][i]['file_path'].split('/')[1]
+        code = endpoints["endpoints"][i]['contents']
+        uml_dict_session_state['root'][main_folder][file_name] = code
+
+    
     display_folder_structure.display_tree(uml_dict_session_state, ["root"])
 
     download_folder = st.button("Download Folder")
