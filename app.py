@@ -119,7 +119,7 @@ with ui_block:
 
 
     dev_project_req = st.text_area("Tell me about your project"
-                        , help = 'please include the description, key features, functionalitiies of your project'
+                        , help = 'please include the description, key features, functionalities of your project'
                         , placeholder = 'create a language model that summarizes a meeting from transcripts and get the keypoints out of it ... '
                         , height = 300)
     
