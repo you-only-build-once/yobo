@@ -1,6 +1,6 @@
 import json
 from function.uml import generate_uml_code
-from function.folder_structre_gen import folder_structure_gen, download_folder_structure
+from function.folder_structure_gen import folder_structure_gen, download_repo
 from function.file_gen import codegen
 from function.endpoint_gen import endpoint_generation
 
@@ -19,4 +19,4 @@ endpoints = endpoint_generation(problem, out["uml_code"], folder_structure)
 # for file in folder_text.key():
 #     if
 
-# download_folder_structure(folder_structure)
+# download_repo(endpoints['endpoints'])

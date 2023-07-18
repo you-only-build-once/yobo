@@ -3,7 +3,7 @@ import streamlit as st
 from templates import display_folder_structure
 
 from function import uml
-from function import folder_structre_gen
+from function import folder_structure_gen
 from function import endpoint_gen
 
 import json
@@ -135,7 +135,7 @@ with ui_block:
     if submit_button and (text_len < MAX_LEN):
         uml_dict = uml.generate_uml_code(dev_project_req, dev_pref_lang, dev_pref_ts, dev_pref_db, dev_pref_integration)
         st.session_state['uml_dict'] = uml_dict 
-        uml_dir_json = folder_structre_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])
+        uml_dir_json = folder_structure_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])
         st.session_state['uml_dir_json'] = uml_dir_json
 
 
@@ -176,23 +176,23 @@ if uml_dict_session_state is not None:
 
     if pseudo_code_json is not None:
         for i in range(len(pseudo_code_json["endpoints"])):
+            # Only necessary for displaying directory.
             main_folder = pseudo_code_json["endpoints"][i]['file_path'].split('/')[0]
             file_name = pseudo_code_json["endpoints"][i]['file_path'].split('/')[1]
             code = pseudo_code_json["endpoints"][i]['contents']
             uml_dict_session_state['root'][main_folder][file_name] = code
+
+        st.download_button(
+            data=folder_structure_gen.download_repo(pseudo_code_json['endpoints']),
+            label="Download Repository",
+            file_name="generated_repo.zip",
+            mime="application/zip",
+            on_click=folder_structure_gen.download_repo,
+            args=(pseudo_code_json['endpoints'],)
+        )
         
     else:
         st.write("... start pseudo code generation ...")
-
-
-    st.download_button(
-        data=folder_structre_gen.download_folder_structure(uml_dict_session_state),
-        label="Download Repository",
-        file_name="generated_repo.zip",
-        mime="application/zip",
-        on_click=folder_structre_gen.download_folder_structure,
-        args=(uml_dict_session_state,)
-    )
 
 else:
     st.write("(example output) ... waiting for user description ...")

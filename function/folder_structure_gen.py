@@ -70,22 +70,16 @@ def folder_structure_gen(problem_description: str, uml_code: str, max_retries: i
 
     return FALLBACK_ERROR_MESSAGE
 
-
-def create_nested_folders_in_memory(base_folder, folder_structure):
+def download_repo(endpoints: dict):
+    """
+    Params
+        endpoints: list of dicts, each with keys "file_path" and "contents" containing
+                   the relative path of the endpoint and the source code, respectively
+    Returns:
+        buffer: a BytesIO object containing all the endpoints.
+    """
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_STORED) as zipf:
-        def add_files(parent_path, folder_dir):
-            for key in folder_dir:
-                if isinstance(folder_dir[key], dict):
-                    if len(folder_dir[key]) == 0:
-                        file_path = os.path.join(parent_path, key)
-                        zipf.writestr(file_path, b'')
-                    else:
-                        add_files(os.path.join(parent_path, key), folder_dir[key])
-        add_files(base_folder, folder_structure)
-    buffer.seek(0)
-    return buffer
-
-def download_folder_structure(folder_dir: dict):
-    buffer = create_nested_folders_in_memory("", folder_dir)
+        for elem in endpoints:
+            zipf.writestr(elem['file_path'], elem['contents'])
     return buffer
