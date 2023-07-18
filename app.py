@@ -5,9 +5,11 @@ from templates import display_folder_structure
 from function import uml
 from function import folder_structure_gen
 from function import endpoint_gen
+from function import user_feedback
 
 import json
 import os
+import time
 
 # create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
@@ -37,9 +39,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# <h5 style='text-align: center;'><span style='font-size: 16px;'><a href="https://github.com/you-only-build-once/yobo">https://github.com/you-only-build-once/yobo</a></span></h5>
-
-
 
 ###### Body ###############################################################################################################################
 ui_block, uml_block = st.columns([1, 1])
@@ -133,10 +132,19 @@ with ui_block:
     
     submit_button = st.button("Submit")
     if submit_button and (text_len < MAX_LEN):
-        uml_dict = uml.generate_uml_code(dev_project_req, dev_pref_lang, dev_pref_ts, dev_pref_db, dev_pref_integration)
-        st.session_state['uml_dict'] = uml_dict 
-        uml_dir_json = folder_structure_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])
-        st.session_state['uml_dir_json'] = uml_dir_json
+        with st.spinner("Analyzing project requirements ..."):
+            uml_dict = uml.generate_uml_code(dev_project_req, dev_pref_lang, dev_pref_ts, dev_pref_db, dev_pref_integration)
+            st.session_state['uml_dict'] = uml_dict 
+            msg_project_req = st.success("Project requirement looks good ... ")
+            time.sleep(2)
+            msg_project_req.empty()
+        with st.spinner("Generating UML and Repo structure ..."):
+            uml_dir_json = folder_structure_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])
+            st.session_state['uml_dir_json'] = uml_dir_json
+            msg_uml_gen = st.success("UML and Repo structure generated ... ")
+            time.sleep(2)
+            msg_uml_gen.empty()
+
 
 
 with uml_block:
@@ -168,8 +176,12 @@ if uml_dict_session_state is not None:
 
     gen_pseudo_buttom = st.button("Approve folder structure and generate pseudo code")
     if gen_pseudo_buttom:
-        pseudo_code_json = endpoint_gen.endpoint_generation(dev_project_req, uml_dict['uml_code'], uml_dict_session_state)
-        st.session_state['pseudo_code_json'] = pseudo_code_json 
+        with st.spinner("Generating pseudo code in repo ..."):
+            pseudo_code_json = endpoint_gen.endpoint_generation(dev_project_req, uml_dict['uml_code'], uml_dict_session_state)
+            st.session_state['pseudo_code_json'] = pseudo_code_json 
+            msg_pseu_code = st.success("pseudo code successfully generated and imported ... ")
+            time.sleep(2)
+            msg_pseu_code.empty()
     
     pseudo_code_json = st.session_state.get('pseudo_code_json', None)
 
@@ -202,3 +214,21 @@ else:
     data = json.loads('{"root": {"transcript_dataset": {"init.py": {}, "data_processing.py": {}, "tests": {"init.py": {}, "test_data_processing.py": {}}}, "language_model": {"init.py": {}, "model.py": {}, "preprocessing.py": {}, "tests": {"init.py": {}, "test_model.py": {}}}, "summarization_module": {"init.py": {}, "summarizer.py": {}, "tests": {"init.py": {}, "test_summarizer.py": {}}}, "key_point_extraction_module": {"init.py": {}, "extractor.py": {}, "tests": {"init.py": {}, "test_extractor.py": {}}}, "config": {"settings.py": {}}, "README.md": {}}}')
     display_folder_structure.display_tree(data, ["root"])
 
+###### USER FEEDBACK FORM ###############################################################################################################################
+with st.form(key='feedback_form'):
+    feedback_str = st.text_input("We're better when we're hearing from you. Share your feedback, ask questions, or discuss opportunities. Let's connect and make great things happen!")
+    submit_button = st.form_submit_button('Send')
+
+    if submit_button:
+        if feedback_str:
+            try:
+                user_feedback.submit_user_feedback(feedback_str)
+                msg_user_feedback_success = st.success("Message sent successfully!")
+                time.sleep(2)
+                msg_user_feedback_success.empty()
+            except Exception as e:
+                msg_user_feedback_error = st.error(f"An error occurred: {str(e)}")
+                time.sleep(2)
+                msg_user_feedback_error.empty()
+        else:
+            st.error("Please provide some message before submitting!")
