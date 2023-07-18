@@ -132,19 +132,12 @@ with ui_block:
     
     submit_button = st.button("Submit")
     if submit_button and (text_len < MAX_LEN):
-        with st.spinner("Analyzing project requirements ..."):
+        with st.spinner(" (1/2) analyzing project requirements ..."):
             uml_dict = uml.generate_uml_code(dev_project_req, dev_pref_lang, dev_pref_ts, dev_pref_db, dev_pref_integration)
             st.session_state['uml_dict'] = uml_dict 
-            msg_project_req = st.success("Project requirement looks good ... ")
-            time.sleep(2)
-            msg_project_req.empty()
-        with st.spinner("Generating UML and Repo structure ..."):
+        with st.spinner(" (2/2) generating UML and Repo structure ..."):
             uml_dir_json = folder_structure_gen.folder_structure_gen(dev_project_req, uml_dict["uml_code"])
             st.session_state['uml_dir_json'] = uml_dir_json
-            msg_uml_gen = st.success("UML and Repo structure generated ... ")
-            time.sleep(2)
-            msg_uml_gen.empty()
-
 
 
 with uml_block:
