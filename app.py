@@ -14,21 +14,21 @@ import time
 # create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
 ###### page config ###############################################################################################################################
-# st.set_page_config(
-#     page_title="yobo",
-#     page_icon="static/yobo_icon.png",
-#     layout="wide",
-#     initial_sidebar_state="expanded",
-# )
-# hide_st_style = """
-#             <style>
-#             MainMenu {visibility: hidden;}
-#             footer {visibility: hidden;}
-#             header {visibility: hidden;}
-#             body {margin-top: -20px;} /* Adjust this value as needed */
-#             </style>
-#             """
-# st.markdown(hide_st_style, unsafe_allow_html=True)
+st.set_page_config(
+    page_title="yobo",
+    page_icon="static/yobo_icon.png",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+hide_st_style = """
+            <style>
+            MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            body {margin-top: -20px;} /* Adjust this value as needed */
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 ###### page header ###############################################################################################################################
