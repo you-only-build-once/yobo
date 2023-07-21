@@ -183,6 +183,8 @@ if uml_dict_session_state is not None:
         for i in range(len(pseudo_code_json["endpoints"])):
             # Only necessary for displaying directory.
             main_folder = pseudo_code_json["endpoints"][i]['file_path'].split('/')[0]
+            if not uml_dict_session_state['root'].get(main_folder):
+                uml_dict_session_state['root'][main_folder] = dict()
             file_name = pseudo_code_json["endpoints"][i]['file_path'].split('/')[1]
             code = pseudo_code_json["endpoints"][i]['contents']
             uml_dict_session_state['root'][main_folder][file_name] = code
