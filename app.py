@@ -10,7 +10,7 @@ from function import user_feedback
 import json
 import os
 import time
-
+  
 # create a language model that summarizes a meeting from transcripts and get the keypoints out of it
 
 ###### page config ###############################################################################################################################
