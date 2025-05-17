@@ -1,5 +1,6 @@
 # app.py
 import streamlit as st
+from llama_backend import query_model
 
 def main():
     st.title("Simple Streamlit Demo")
@@ -10,10 +11,10 @@ def main():
     # 2. Submit button
     if st.button("Submit"):
         # 3. Generate a response (echoing back for this demo)
-        response = f"You entered: {user_input}"
+        out = query_model(user_input)
         
         # 4. Output box
-        st.text_area("Response", value=response, height=100)
+        st.text_area("Response", value=out["response"], height=100)
 
 if __name__ == "__main__":
     main()
