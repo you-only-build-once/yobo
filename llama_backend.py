@@ -10,7 +10,7 @@ from llama_index.core import SimpleDirectoryReader, StorageContext
 import qdrant_client
 from llama_index.core import SimpleDirectoryReader
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 
 Settings.llm = Ollama(model="llama3.2:latest", request_timeout=120.0)
 Settings.embed_model = OpenAIEmbedding(model="text-embedding-ada-002")
