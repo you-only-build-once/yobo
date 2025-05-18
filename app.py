@@ -1,6 +1,7 @@
 # app.py
 import streamlit as st
 from llama_backend import query_model
+from streamlit_pdf_viewer import pdf_viewer
 import os # Import os for path manipulation
 # import streamlit_shadcn_ui as ui # No longer using shadcn for input/button here
 
@@ -68,6 +69,7 @@ def main():
         # Get response from model
         response_data = query_model(prompt)
         response = response_data.get("response", "Sorry, I couldn't get a response.")
+        pdf_files = response_data.get("files", [])
         
         # Clear the temporary loading message
         assistant_response_area.empty()
@@ -78,6 +80,12 @@ def main():
             
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
+        if pdf_files:
+            with st.chat_message("assistant", avatar="🦙"):
+                st.subheader("Source Documents")
+                for f in pdf_files:
+                    print(f)
+                    pdf_viewer(f['file_path'])
 
 if __name__ == "__main__":
     main()

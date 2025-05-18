@@ -52,6 +52,14 @@ def query_model(input:str) -> dict:
         print(f"File ID: {node.metadata.get('file_name')}, Score: {node.score:.2f}\nContent: {node.text[:200]}...\nMetadata: {node.metadata}")
         print("----------------------------------------")
     print("\n\n")
+    files = []
+    for node in response.source_nodes:
+        f = {}
+        f['file_path'] = node.metadata.get('file_path')
+        f['file_type'] = node.metadata.get('file_type')
+        f['file_name'] = node.metadata.get('file_name')
+        files.append(f)
     return {
-        "response": response
+        "response": response,
+        "files": files
     }
