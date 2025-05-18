@@ -1,8 +1,7 @@
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.clip import ClipEmbedding
 from llama_index.core import Settings
-from llama_index.embeddings.openai import OpenAIEmbedding
-import os
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.indices import MultiModalVectorStoreIndex
 from llama_index.vector_stores.qdrant import QdrantVectorStore
 from llama_index.core import SimpleDirectoryReader, StorageContext
@@ -10,10 +9,10 @@ from llama_index.core import SimpleDirectoryReader, StorageContext
 import qdrant_client
 from llama_index.core import SimpleDirectoryReader
 
-os.environ["OPENAI_API_KEY"] = ""
-
 Settings.llm = Ollama(model="llama3.2:latest", request_timeout=120.0)
-Settings.embed_model = OpenAIEmbedding(model="text-embedding-ada-002")
+Settings.embed_model = HuggingFaceEmbedding(
+    model_name="BAAI/bge-small-en-v1.5"
+)
 Settings.image_embed_model = ClipEmbedding()
 
 # Create a local Qdrant vector store
@@ -48,6 +47,11 @@ def query_model(input:str) -> dict:
     """
     Given user input, return model response as dictionary.
     """
+    response = query_engine.query(input)
+    for node in response.source_nodes:
+        print(f"File ID: {node.metadata.get('file_name')}, Score: {node.score:.2f}\nContent: {node.text[:200]}...\nMetadata: {node.metadata}")
+        print("----------------------------------------")
+    print("\n\n")
     return {
-        "response": query_engine.query(input)
+        "response": response
     }
