@@ -9,10 +9,15 @@ from llama_index.core import SimpleDirectoryReader, StorageContext
 import qdrant_client
 from llama_index.core import SimpleDirectoryReader
 
+from llama_index.embeddings.openai import OpenAIEmbedding
+import os
+os.environ["OPENAI_API_KEY"] = ""
+
 Settings.llm = Ollama(model="llama3.2:latest", request_timeout=120.0)
-Settings.embed_model = HuggingFaceEmbedding(
-    model_name="BAAI/bge-small-en-v1.5"
-)
+# Settings.embed_model = HuggingFaceEmbedding(
+#     model_name="BAAI/bge-small-en-v1.5"
+# )
+Settings.embed_model = OpenAIEmbedding(model="text-embedding-ada-002")
 Settings.image_embed_model = ClipEmbedding()
 
 # Create a local Qdrant vector store
@@ -33,7 +38,7 @@ storage_context = StorageContext.from_defaults(
 )
 
 # Create the MultiModal index
-documents = SimpleDirectoryReader("test_data").load_data()
+documents = SimpleDirectoryReader("data_final", recursive=True).load_data()
 index = MultiModalVectorStoreIndex.from_documents(
     documents,
     storage_context=storage_context,

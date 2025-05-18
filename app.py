@@ -70,6 +70,7 @@ def main():
         response_data = query_model(prompt)
         response = response_data.get("response", "Sorry, I couldn't get a response.")
         pdf_files = response_data.get("files", [])
+        print(f"FOUND {len(pdf_files)} pdf files")
         
         # Clear the temporary loading message
         assistant_response_area.empty()
@@ -83,9 +84,9 @@ def main():
         if pdf_files:
             with st.chat_message("assistant", avatar="🦙"):
                 st.subheader("Source Documents")
-                for f in pdf_files:
+                for i, f in enumerate(pdf_files):
                     print(f)
-                    pdf_viewer(f['file_path'])
+                    pdf_viewer(f['file_path'], key=f"pdf_{i}")
 
 if __name__ == "__main__":
     main()
