@@ -1,10 +1,11 @@
 # app.py
 import streamlit as st
 from llama_backend import query_model
+import os # Import os for path manipulation
 # import streamlit_shadcn_ui as ui # No longer using shadcn for input/button here
 
 def main():
-    st.title("Lama Buddy Chat")
+    st.title("Your Pet Lama")
 
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -23,12 +24,37 @@ def main():
         with st.chat_message("user"):
             st.markdown(prompt)
 
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            with st.spinner("Lama Buddy is thinking..."):
-                response_data = query_model(prompt)
-                response = response_data.get("response", "Sorry, I couldn't get a response.")
+        # --- Assistant's turn --- 
+        # Create a placeholder for the assistant's entire response area
+        assistant_response_area = st.empty()
+
+        # Show temporary loading message with video as avatar
+        with assistant_response_area.container():
+            loading_avatar_col, loading_bubble_col = st.columns([1, 5], gap="small")
+            project_root = os.path.dirname(os.path.abspath(__file__))
+            video_path = os.path.join(project_root, "assets", "loading_llama.mp4")
+            try:
+                with open(video_path, "rb") as video_file:
+                    video_bytes = video_file.read()
+                loading_avatar_col.video(video_bytes, format="video/mp4", start_time=0, end_time=5, loop=True, autoplay=True, muted=True)
+            except FileNotFoundError:
+                loading_avatar_col.markdown("🦙") # Fallback static avatar if video not found
+            
+            # Style the thinking message to look like a bubble
+            with loading_bubble_col.container(border=True):
+                st.markdown("Lama Buddy is thinking...")
+        
+        # Get response from model
+        response_data = query_model(prompt)
+        response = response_data.get("response", "Sorry, I couldn't get a response.")
+        
+        # Clear the temporary loading message
+        assistant_response_area.empty()
+        
+        # Display final assistant response with static avatar
+        with st.chat_message("assistant", avatar="🦙"):
             st.markdown(response)
+            
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
 
